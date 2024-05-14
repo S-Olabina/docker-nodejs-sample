@@ -1,0 +1,36 @@
+version: "3.8"
+services:
+  website:
+    image: test-app2
+    ports:
+      - "3000:3000"
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: test2_db
+    networks:
+      app-network:
+        ipv4_address: 192.168.41.22
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: test2_db
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      app-network:
+        ipv4_address: 192.168.41.21
+volumes:
+  pgdata:
+networks:
+  app-network:
+    ipam:
+      driver: default
+      config:
+        - subnet: "192.168.41.0/24"
