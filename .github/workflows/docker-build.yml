@@ -19,7 +19,7 @@ jobs:
 
     - name: Get Git Tag
       id: tag
-      run: echo "::set-output name=tag::$(git describe --tag --addrev=0)"
+      run: echo "::set-output name=tag::$(git describe --tag --abbrev=0)"
     
     - name: Print Tag Value
       run: echo "Tag value:${{ steps.tag.outputs.tag }}"
