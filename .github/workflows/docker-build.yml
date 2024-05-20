@@ -26,7 +26,7 @@ jobs:
           echo "::set-output name=primary_tag::latest"
           echo "::set-output name=secondary_tag::"
         else
-          echo "::set-output name=tag::${{ github.ref_name }}"
+          echo "::set-output name=primary_tag::${{ github.ref_name }}"
           echo "::set-output name=secondary_tag::latest"
         fi
     
