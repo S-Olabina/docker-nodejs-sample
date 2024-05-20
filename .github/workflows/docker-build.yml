@@ -30,21 +30,21 @@ jobs:
           echo "::set-output name=secondary_tag::latest"
         fi
     
-    - name: Print Tag Value
+    - name: Print Tag Values
       run: |
-        echo "Primary tag value: ${{ steps.determine-tags.outputs.primary_tag }}"
-        echo "Secondary tag value: ${{ steps.determine-tags.outputs.secondary_tag }}"
+        echo "Primary tag value: ${{ steps.tag.outputs.primary_tag }}"
+        echo "Secondary tag value: ${{ steps.tag.outputs.secondary_tag }}"
     
     - name: Build Docker Image
       run: |
-        docker build -t docker.pkg.github.com/${{ github.repository }}/test-app2:${{ steps.determine-tags.outputs.primary_tag }} .
+        docker build -t docker.pkg.github.com/${{ github.repository }}/test-app2:${{ steps.tag.outputs.primary_tag }} .
 
     - name: Push Docker Image with Primary Tag
       run: |
-        docker push docker.pkg.github.com/${{ github.repository }}/test-app2:${{ steps.determine-tags.outputs.primary_tag }}
+        docker push docker.pkg.github.com/${{ github.repository }}/test-app2:${{ steps.tag.outputs.primary_tag }}
 
     - name: Tag and Push Docker Image as Latest
-      if: steps.determine-tags.outputs.secondary_tag == 'latest'
+      if: steps.tag.outputs.secondary_tag == 'latest'
       run: |
-        docker tag docker.pkg.github.com/${{ github.repository }}/test-app2:${{ steps.determine-tags.outputs.primary_tag }} docker.pkg.github.com/${{ github.repository }}/test-app2:latest
+        docker tag docker.pkg.github.com/${{ github.repository }}/test-app2:${{ steps.tag.outputs.primary_tag }} docker.pkg.github.com/${{ github.repository }}/test-app2:latest
         docker push docker.pkg.github.com/${{ github.repository }}/test-app2:latest
