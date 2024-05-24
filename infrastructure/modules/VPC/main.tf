@@ -77,5 +77,5 @@ module "vpc" {
 
     create_igw = true
 
-    tags = { Owner = var.Owner }
+    tags = { Owner = var.owner }
 }

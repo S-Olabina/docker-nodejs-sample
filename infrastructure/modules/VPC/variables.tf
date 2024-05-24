@@ -3,8 +3,7 @@ variable "vpc_cidr" {
   default = "172.20.0.0/16"
 }
 
-variable "Owner" {
+variable "owner" {
     type = string
     default = "Stefan Olabina"
 }
-
