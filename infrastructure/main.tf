@@ -15,3 +15,7 @@ provider "aws" {
 module "vpc" {
   source = "./modules/VPC"
 }
+
+module "iam_assumable_role_with_oidc" {
+  source = "./modules/IAM"
+}
