@@ -3,6 +3,8 @@ module "ecr" {
 
   repository_name = "private-ecr-repo"
 
+  repository_read_write_access_arns = var.repository_read_write_access_arns
+
   repository_lifecycle_policy = jsonencode({
     rules = [
       {
