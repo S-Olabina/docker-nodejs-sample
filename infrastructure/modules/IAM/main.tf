@@ -7,7 +7,6 @@ module "iam_assumable_role_with_oidc" {
 
   tags = {
     Role = "github-actions-ecr-role"
-    Owner = var.owner
   }
 
   provider_url = module.iam_github_oidc_provider.url
@@ -31,10 +30,6 @@ module "iam_policy" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-policy"
 
   name        = "github-actions-ecr-policy"
-
-  tags = {
-    Owner = var.owner
-  }
 
   policy = <<EOF
 {
