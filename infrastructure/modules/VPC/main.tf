@@ -56,8 +56,8 @@ module "vpc" {
     azs = data.aws_availability_zones.available.names
 
     enable_nat_gateway = true
-    single_nat_gateway = false
-    one_nat_gateway_per_az = true
+    single_nat_gateway = true
+    one_nat_gateway_per_az = false
 
     private_subnets = [
         lookup(module.subnet_addrs.network_cidr_blocks, "private-a", "default"),
@@ -76,6 +76,4 @@ module "vpc" {
     ]
 
     create_igw = true
-
-    tags = { Owner = var.owner }
 }
