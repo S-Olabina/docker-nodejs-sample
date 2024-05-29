@@ -29,7 +29,7 @@ module "iam_github_oidc_provider" {
 module "iam_policy" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-policy"
 
-  name        = "github-actions-ecr-policy"
+  name        = "github-actions-policy"
 
   policy = <<EOF
 {
@@ -46,6 +46,18 @@ module "iam_policy" {
         "ecr:PutImage",
         "ecr:UploadLayerPart",
         "ecr:BatchDeleteImage"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
+    },
+    {
+      "Action": [
+        "eks:AccessKubernetesApi",
+        "eks:DescribeNodegroup",
+        "eks:DescribeCluster",
+        "eks:ListClusters",
+        "eks:ListNodegroups",
+        "sts:AssumeRoleWithWebIdentity"
       ],
       "Effect": "Allow",
       "Resource": "*"

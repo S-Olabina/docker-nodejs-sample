@@ -2,8 +2,8 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 20.0"
 
-  cluster_name    = "task2-cluster"
-  cluster_version = "1.29"
+  cluster_name    = "task2_eks"
+  cluster_version = "1.30"
 
   vpc_id = var.vpc_id
   subnet_ids = var.subnet_ids
@@ -14,7 +14,7 @@ module "eks" {
   cluster_endpoint_private_access = true
   
   eks_managed_node_groups = {
-    task2-node_group = {
+    task2_node_group = {
       create_iam_role = true
 
       iam_role_additional_policies = {
@@ -35,6 +35,22 @@ module "eks" {
   # Cluster access entry
   # To add the current caller identity as an administrator
   enable_cluster_creator_admin_permissions = true
+
+  access_entries = {
+    task2-github-access_entries = {
+      principal_arn = var.principal_arn
+
+      policy_associations = {
+        task2-eks-policy = {
+          policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSEditPolicy"
+          access_scope = {
+            namespaces = ["vegait-training"]
+            type       = "namespace"
+          }
+        }
+      }
+    }
+  }
 
 
   tags = {
