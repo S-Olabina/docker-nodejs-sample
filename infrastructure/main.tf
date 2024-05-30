@@ -42,6 +42,5 @@ module "eks"{
 module "irsa_for_load_balancer" {
   source = "./modules/IRSA"
 
-  policy_arn = module.iam_assumable_role_with_oidc.iam_role_arn
-  oidc_provider = module.iam_assumable_role_with_oidc.oidc_provider
+  oidc_provider = module.eks.oidc_provider_arn
 }
