@@ -38,3 +38,10 @@ module "eks"{
   subnet_ids = module.vpc.subnet_ids
   principal_arn = module.iam_assumable_role_with_oidc.iam_role_arn
 }
+
+module "irsa_for_load_balancer" {
+  source = "./modules/IRSA"
+
+  policy_arn = module.iam_assumable_role_with_oidc.iam_role_arn
+  oidc_provider = module.iam_assumable_role_with_oidc.oidc_provider
+}
