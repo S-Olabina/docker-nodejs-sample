@@ -4,6 +4,10 @@ terraform {
         source = "hashicorp/aws"
         version = "~> 5.0"
     }
+    helm = {
+      source = "hashicorp/helm"
+      version = "~> 2.13.2"
+    }
   }
 }
 
@@ -15,6 +19,10 @@ provider "aws" {
       Owner = var.owner
     }
   }
+}
+
+provider "helm" {
+  # Configuration options
 }
 
 module "vpc" {
