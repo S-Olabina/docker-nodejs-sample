@@ -44,3 +44,7 @@ module "irsa_for_load_balancer" {
 
   oidc_provider = module.eks.oidc_provider_arn
 }
+
+module "acm" {
+  source = "./modules/Route"
+}
