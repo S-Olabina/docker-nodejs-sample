@@ -64,3 +64,10 @@ module "irsa_for_load_balancer" {
 module "acm" {
   source = "./modules/Route"
 }
+
+module "load_balancer_controller" {
+  source = "./modules/Helm"
+
+  cluster_name = module.eks.cluster_name
+  iam_role_arn = module.iam_assumable_role_with_oidc.iam_role_arn
+}
