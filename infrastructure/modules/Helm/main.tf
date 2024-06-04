@@ -2,11 +2,11 @@ module load-balancer-controller {
   source  = "terraform-module/release/helm"
   version = "~> 2.8.0"
 
-  namespace  = "vegait-training"
+  namespace  = "vegait-load-balancer"
   repository =  "https://aws.github.io/eks-charts"
 
   app = {
-    name          = "aws-load-balancer-controller"
+    name          = "load-balancer"
     version       = "1.8.1"
     chart         = "aws-load-balancer-controller"
     deploy        = 1
@@ -20,7 +20,7 @@ module load-balancer-controller {
     },
     {
       name  = "serviceAccount.name"
-      value = "aws-load-balancer-controller"
+      value = "load-balancer"
     },
     {
       name  = "serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
