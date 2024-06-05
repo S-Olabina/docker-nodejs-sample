@@ -42,3 +42,25 @@ module load-balancer-controller {
     },
   ]
 }
+
+resource "helm_release" "psql_bitnami" {
+  name = "psql-bitnami"
+  repository = "oci://registry-1.docker.io/bitnamicharts/postgresql"
+  chart = "psql-bitnami"
+  namespace = "vegait-training"
+  version = "~> 15.5.0"
+
+  set {
+    name = "primary.persistence.enabled"
+    value = "true"
+  }
+  set {
+    name = "primary.persistence.storageClass"
+    value = "standard"
+  }
+  set {
+    name = "primary.persistence.accessModes[0]"
+    value = "ReadWriteOnce"
+  }
+
+}
