@@ -5,11 +5,13 @@ module load-balancer-controller {
   namespace  = "vegait-load-balancer"
   repository =  "https://aws.github.io/eks-charts"
 
+
   app = {
     name          = "load-balancer"
     version       = "1.8.1"
     chart         = "aws-load-balancer-controller"
     deploy        = 1
+    create_namespace = true
   }
 
 
@@ -27,8 +29,16 @@ module load-balancer-controller {
       value = var.iam_role_arn
     },
     {
-      name  = "serviceAccount.create"
-      value = "false"
+      name  = "region"
+      value = var.region
+    },
+    {
+      name  = "vpcId"
+      value = var.vpc_id
+    },
+    {
+      name = "defaultTargetType"
+      value = "ip"
     },
   ]
 }
