@@ -4,6 +4,10 @@ terraform {
         source = "hashicorp/aws"
         version = "~> 5.0"
     }
+    helm = {
+      source = "hashicorp/helm"
+      version = "~> 2.13.2"
+    }
   }
 }
 
@@ -13,6 +17,18 @@ provider "aws" {
   default_tags {
     tags = {
       Owner = var.owner
+    }
+  }
+}
+
+provider "helm" {
+  kubernetes {
+    host = module.eks.cluster_endpoint
+    cluster_ca_certificate = base64decode(module.eks.cluster_ca_cert)
+    exec {
+      api_version = "client.authentication.k8s.io/v1beta1"
+      args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
+      command     = "aws"
     }
   }
 }
@@ -47,4 +63,13 @@ module "irsa_for_load_balancer" {
 
 module "acm" {
   source = "./modules/Route"
+}
+
+module "load_balancer_controller" {
+  source = "./modules/Helm"
+
+  cluster_name = module.eks.cluster_name
+  iam_role_arn = module.irsa_for_load_balancer.irsa_role_arn
+  vpc_id = module.vpc.vpc_id
+  region = var.region
 }
