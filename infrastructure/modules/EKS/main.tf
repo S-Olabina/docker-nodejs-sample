@@ -13,6 +13,14 @@ module "eks" {
 
   cluster_endpoint_private_access = true
   
+  cluster_addons = {
+    aws-ebs-csi-driver = {
+      addon_version            = "v1.30.0-eksbuild.1"
+      service_account_role_arn = var.iam_csi_role_arn
+      resolve_conflicts        = "PRESERVE"
+    }
+  }
+
   eks_managed_node_groups = {
     task2_node_group = {
       create_iam_role = true

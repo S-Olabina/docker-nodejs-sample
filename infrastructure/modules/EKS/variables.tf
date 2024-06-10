@@ -11,3 +11,7 @@ variable "subnet_ids" {
 variable "principal_arn" {
   type = string
 }
+
+variable "iam_csi_role_arn" {
+  type = string
+}
