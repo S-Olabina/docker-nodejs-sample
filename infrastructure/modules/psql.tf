@@ -35,5 +35,23 @@ resource "helm_release" "psql_bitnami" {
     name = "containerPorts.postgresql"
     value = lookup(jsondecode(sensitive(data.aws_secretsmanager_secret_version.secrets.secret_string)), "port", "Error")
   }
+  set {
+    name = "primary.persistence.storageClass"
+    value = kubernetes_storage_class.storage_class.metadata[0].name
+  }
 
+}
+
+
+resource "kubernetes_storage_class" "storage_class" {
+  metadata {
+    name = "task2-storage-class"
+  }
+
+  storage_provisioner    = "ebs.csi.aws.com"
+  volume_binding_mode    = "WaitForFirstConsumer"
+
+  parameters = {
+    "encrypted" = "true"
+  }
 }

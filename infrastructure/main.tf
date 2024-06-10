@@ -38,6 +38,16 @@ provider "helm" {
   }
 }
 
+provider "kubernetes" {
+  host = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_ca_cert)
+  exec {
+    api_version = "client.authentication.k8s.io/v1beta1"
+    args        = ["eks", "get-token", "--cluster-name", module.eks.cluster_name]
+    command     = "aws"
+  }
+}
+
 module "vpc" {
   source = "./modules/VPC"
 }
@@ -58,9 +68,11 @@ module "eks"{
   vpc_id = module.vpc.vpc_id
   subnet_ids = module.vpc.subnet_ids
   principal_arn = module.iam_assumable_role_with_oidc.iam_role_arn
+
+  iam_csi_role_arn = module.irsa.iam_csi_role_arn
 }
 
-module "irsa_for_load_balancer" {
+module "irsa" {
   source = "./modules/IRSA"
 
   oidc_provider = module.eks.oidc_provider_arn
@@ -74,7 +86,7 @@ module "load_balancer_controller" {
   source = "./modules/Helm"
 
   cluster_name = module.eks.cluster_name
-  iam_role_arn = module.irsa_for_load_balancer.irsa_role_arn
+  iam_role_arn = module.irsa.irsa_role_arn
   vpc_id = module.vpc.vpc_id
   region = var.region
 }
@@ -82,7 +94,7 @@ module "load_balancer_controller" {
 module "secrets_manager" {
   source = "terraform-aws-modules/secrets-manager/aws"
   version = "~> 1.1.2"
-  name = "postgres-credentials"
+  name = "postgres1-credentials"
 
   ignore_secret_changes = true
   secret_string = jsonencode({
