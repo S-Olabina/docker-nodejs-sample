@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.appname }}-config
+  namespace: {{ .Values.namespace }}
+data:
+  todo-url: {{ .Values.appname }}-service

@@ -1,0 +1,36 @@
+# Default values for Helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+appname: todo
+namespace: vegait-trainging
+lable: todo
+replicaCount: 1
+
+map:
+  user-name: cG9zdGdyZXM=
+  password: c2VjcmV0
+  dbname: test2_db
+  host: psql-bitnami
+  port: 5432
+
+image:
+  repository: ghcr.io/s-olabina/docker-nodejs-sample/test-app2
+  pullPolicy: Always
+  tag: latest
+  name: test-app2
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 5432
+  protocol: TCP
+
+ingress:
+  className: alb
+  annotations: {}
+  host: stefan-olabina.sigma.devops.sitesstage.com
+  path: /
+  pathType: Prefix
+  albTargetType: ip
+  scheme: internet-facing
