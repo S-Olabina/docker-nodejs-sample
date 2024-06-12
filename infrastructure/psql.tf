@@ -1,5 +1,4 @@
-
-resource "helm_release" "psql_bitnami" {
+resource "helm_release" "bitnami" {
   name = "psql-bitnami"
   repository = "https://charts.bitnami.com/bitnami"
   chart = "postgresql"
@@ -41,7 +40,6 @@ resource "helm_release" "psql_bitnami" {
   }
 
 }
-
 
 resource "kubernetes_storage_class" "storage_class" {
   metadata {

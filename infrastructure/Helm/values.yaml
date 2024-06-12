@@ -3,19 +3,21 @@
 # Declare variables to be passed into your templates.
 
 appname: todo
-namespace: vegait-trainging
+namespace: "vegait-training"
 lable: todo
 replicaCount: 1
 
+fullnameOverride: todo
+
 map:
-  user-name: cG9zdGdyZXM=
-  password: c2VjcmV0
-  dbname: test2_db
-  host: psql-bitnami
+  userName: "postgres"
+  password: "secret"
+  dbname: "test2_db"
+  host: "psql-bitnami"
   port: 5432
 
 image:
-  repository: ghcr.io/s-olabina/docker-nodejs-sample/test-app2
+  repository: "ghcr.io/s-olabina/docker-nodejs-sample/test-app2"
   pullPolicy: Always
   tag: latest
   name: test-app2
@@ -29,8 +31,8 @@ service:
 ingress:
   className: alb
   annotations: {}
-  host: stefan-olabina.sigma.devops.sitesstage.com
+  host: "stefan-olabina.sigma.devops.sitesstage.com"
   path: /
   pathType: Prefix
   albTargetType: ip
-  scheme: internet-facing
+  scheme: "internet-facing"

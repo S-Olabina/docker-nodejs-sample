@@ -94,7 +94,7 @@ module "load_balancer_controller" {
 module "secrets_manager" {
   source = "terraform-aws-modules/secrets-manager/aws"
   version = "~> 1.1.2"
-  name = "postgres1-credentials"
+  name = "psql-credentials"
 
   ignore_secret_changes = true
   secret_string = jsonencode({
