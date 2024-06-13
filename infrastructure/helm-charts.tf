@@ -140,7 +140,7 @@ resource "helm_release" "custom-helm-chart" {
   }
   set{
     name = "ingress.host"
-    value = "stefan-olabina.sigma.devops.sitesstage.com"
+    value = var.domain
   }
   set{
     name = "ingress.path"

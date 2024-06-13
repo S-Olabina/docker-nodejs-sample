@@ -4,7 +4,6 @@ metadata:
   name: {{ .Values.appname }}-ingress
   namespace: {{ .Values.namespace}}
   annotations:
-    kubernetes.io/ingress.class: {{ .Values.ingress.className }}
     alb.ingress.kubernetes.io/target-type: {{ .Values.ingress.albTargetType }}
     alb.ingress.kubernetes.io/scheme: {{ .Values.ingress.scheme }}
     alb.ingress.kubernetes.io/tags: Owner=Stefan Olabina
@@ -12,6 +11,9 @@ metadata:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}], [{"HTTPS": 443}]'
 spec:
   ingressClassName: {{ .Values.ingress.className }}
+  tls:
+  - hosts:
+    - {{ .Values.ingress.host }}
   rules:
   - host: {{ .Values.ingress.host}} 
     http:

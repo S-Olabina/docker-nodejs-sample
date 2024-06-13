@@ -80,6 +80,8 @@ module "irsa" {
 
 module "acm" {
   source = "./modules/Route"
+
+  domain = var.domain
 }
 
 module "load_balancer_controller" {
