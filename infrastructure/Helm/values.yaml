@@ -35,3 +35,4 @@ ingress:
   pathType: 
   albTargetType: 
   scheme: 
+  certificateArn:

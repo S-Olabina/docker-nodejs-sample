@@ -158,5 +158,9 @@ resource "helm_release" "custom-helm-chart" {
     name = "ingress.scheme"
     value = "internet-facing"
   }
+  set{
+    name = "ingress.certificateArn"
+    value = module.acm.acm_certificate_arn
+  }
 
 }
