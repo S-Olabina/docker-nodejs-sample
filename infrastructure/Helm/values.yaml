@@ -1,0 +1,38 @@
+# Default values for Helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+appname: 
+namespace: 
+lable: 
+replicaCount: 
+
+fullnameOverride: 
+
+map:
+  userName: 
+  password: 
+  dbname: 
+  host: 
+  port: 
+
+image:
+  repository: 
+  pullPolicy: 
+  tag:
+  name: 
+
+service:
+  type: 
+  port: 
+  targetPort: 
+  protocol: 
+
+ingress:
+  className: 
+  host: 
+  path: 
+  pathType: 
+  albTargetType: 
+  scheme: 
+  certificateArn:
