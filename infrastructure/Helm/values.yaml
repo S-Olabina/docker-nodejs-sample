@@ -2,37 +2,36 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-appname: todo
-namespace: "vegait-training"
-lable: todo
-replicaCount: 1
+appname: 
+namespace: 
+lable: 
+replicaCount: 
 
-fullnameOverride: todo
+fullnameOverride: 
 
 map:
-  userName: "postgres"
-  password: "secret"
-  dbname: "test2_db"
-  host: "psql-bitnami"
-  port: 5432
+  userName: 
+  password: 
+  dbname: 
+  host: 
+  port: 
 
 image:
-  repository: "ghcr.io/s-olabina/docker-nodejs-sample/test-app2"
-  pullPolicy: Always
-  tag: latest
-  name: test-app2
+  repository: 
+  pullPolicy: 
+  tag:
+  name: 
 
 service:
-  type: ClusterIP
-  port: 80
-  targetPort: 5432
-  protocol: TCP
+  type: 
+  port: 
+  targetPort: 
+  protocol: 
 
 ingress:
-  className: alb
-  annotations: {}
-  host: "stefan-olabina.sigma.devops.sitesstage.com"
-  path: /
-  pathType: Prefix
-  albTargetType: ip
-  scheme: "internet-facing"
+  className: 
+  host: 
+  path: 
+  pathType: 
+  albTargetType: 
+  scheme: 
