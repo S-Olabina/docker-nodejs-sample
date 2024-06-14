@@ -58,7 +58,7 @@ resource "helm_release" "custom-helm-chart" {
   name = "todo"
   repository = "oci://${module.ecr.repository_registry_id}.dkr.ecr.${var.region}.amazonaws.com"
   chart = "private-ecr-repo"
-  version = "0.1.0"
+  version = "~> 0.1.0"
   namespace = "vegait-training"
   create_namespace = false
 

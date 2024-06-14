@@ -8,7 +8,7 @@ metadata:
     alb.ingress.kubernetes.io/scheme: {{ .Values.ingress.scheme }}
     alb.ingress.kubernetes.io/tags: Owner=Stefan Olabina
     alb.ingress.kubernetes.io/ssl-redirect: '443'
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}], [{"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS": 443}]'
     alb.ingress.kubernetes.io/certificate-arn: {{ .Values.ingress.certificateArn }}
 spec:
   ingressClassName: {{ .Values.ingress.className }}
