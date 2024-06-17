@@ -36,6 +36,13 @@ provider "helm" {
       command     = "aws"
     }
   }
+
+  registry {
+    url = "oci://${module.ecr.repository_url}"
+    username = module.ecr.token-username
+    password = module.ecr.token-password
+  }
+
 }
 
 provider "kubernetes" {
@@ -79,8 +86,7 @@ module "irsa" {
 }
 
 module "acm" {
-  depends_on = [ helm_release.custom-helm-chart ]
-  
+  #depends_on = [ helm_release.custom-helm-chart ]
   source = "./modules/Route"
 
   domain = var.domain

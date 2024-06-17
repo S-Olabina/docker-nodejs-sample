@@ -27,3 +27,7 @@ module "ecr" {
     Terraform   = "true"
   }
 }
+
+data "aws_ecr_authorization_token" "login-token" {
+  
+}
