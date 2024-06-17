@@ -18,6 +18,7 @@ module "acm" {
 }
 
 data "kubernetes_ingress_v1" "abl-controller-ingress" {
+  depends_on = [ var.ingress-name ]
   metadata {
     name = "${var.ingress-name}-ingress"
     namespace = var.ingress-namespace
@@ -29,6 +30,7 @@ locals {
 }
 
 data "aws_lb" "aws-alb" {
+  depends_on = [ data.kubernetes_ingress_v1.abl-controller-ingress ]
   name = join("-", slice(local.alb-name, 0, length(local.alb-name) - 1))
 }
 

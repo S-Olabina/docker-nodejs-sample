@@ -55,6 +55,7 @@ resource "kubernetes_storage_class" "storage_class" {
 }
 
 resource "helm_release" "custom-helm-chart" {
+  depends_on = [ helm_release.bitnami ]
   name = "todo"
   repository = "oci://${module.ecr.repository_registry_id}.dkr.ecr.${var.region}.amazonaws.com"
   chart = "private-ecr-repo"
@@ -84,23 +85,23 @@ resource "helm_release" "custom-helm-chart" {
   }
   set{
     name = "map.userName"
-    value = "postgres"
+    value = lookup(jsondecode(sensitive(data.aws_secretsmanager_secret_version.secrets.secret_string)), "username", "Error")
   }
   set{
     name = "map.password"
-    value = "secret"
+    value = lookup(jsondecode(sensitive(data.aws_secretsmanager_secret_version.secrets.secret_string)), "password", "Error")
   }
   set{
     name = "map.dbname"
-    value = "test2_db"
+    value = lookup(jsondecode(sensitive(data.aws_secretsmanager_secret_version.secrets.secret_string)), "dbname", "Error")
   }
   set{
     name = "map.host"
-    value = "psql-bitnami"
+    value = "psql-bitnami-postgresql"
   }
   set{
     name = "map.port"
-    value = 5432
+    value = lookup(jsondecode(sensitive(data.aws_secretsmanager_secret_version.secrets.secret_string)), "port", "Error")
   }
   set{
     name = "image.repository"
