@@ -79,9 +79,14 @@ module "irsa" {
 }
 
 module "acm" {
+  depends_on = [ helm_release.custom-helm-chart ]
+  
   source = "./modules/Route"
 
   domain = var.domain
+
+  ingress-name = helm_release.custom-helm-chart.name
+  ingress-namespace = helm_release.custom-helm-chart.namespace
 }
 
 module "load_balancer_controller" {
@@ -111,3 +116,4 @@ data "aws_secretsmanager_secret_version" "secrets" {
   depends_on = [ module.secrets_manager ]
   secret_id  = module.secrets_manager.secret_id
 }
+
