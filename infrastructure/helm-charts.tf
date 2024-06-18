@@ -125,7 +125,7 @@ resource "helm_release" "custom-helm-chart" {
   }
   set{
     name = "service.port"
-    value = 80
+    value = 443
   }
   set{
     name = "service.targetPort"
