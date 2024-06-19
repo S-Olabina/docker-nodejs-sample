@@ -18,7 +18,7 @@ spec:
       - name: {{ .Values.image.name }}
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
         ports:
-        - containerPort: 5432
+        - containerPort: 3000
         env:
         - name: POSTGRES_USER
           valueFrom:

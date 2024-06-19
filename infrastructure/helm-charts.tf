@@ -129,7 +129,7 @@ resource "helm_release" "custom-helm-chart" {
   }
   set{
     name = "service.targetPort"
-    value = 5432
+    value = 3000
   }
   set{
     name = "service.protocol"
