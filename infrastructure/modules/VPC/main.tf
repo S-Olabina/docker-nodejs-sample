@@ -76,4 +76,8 @@ module "vpc" {
     ]
 
     create_igw = true
+
+    public_subnet_tags = {
+    "kubernetes.io/role/elb" = 1
+  }
 }
