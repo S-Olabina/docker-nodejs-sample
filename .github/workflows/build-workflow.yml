@@ -2,14 +2,23 @@ name: Docker Build
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Tag version'
+        required: true
   push:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'
       - 'v[0-9]+.[0-9]+'
       - 'v[0-9]+'
 
+env:
+  AWS_REGION: eu-central-1
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }} 
+  IAM_ROLE_NAME: ${{ secrets.IAM_ROLE_NAME }}
+
 jobs:
-  build-and-push:
+  build-and-push-docker-image:
     runs-on: ubuntu-latest
     
     steps:
@@ -23,17 +32,14 @@ jobs:
       id: tag
       run: |
         if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
-          echo "::set-output name=primary_tag::latest"
-          echo "::set-output name=secondary_tag::"
+          echo "::set-output name=primary_tag::${{ inputs.version }}"
         else
           echo "::set-output name=primary_tag::${{ github.ref_name }}"
-          echo "::set-output name=secondary_tag::latest"
         fi
     
     - name: Print Tag Values
       run: |
         echo "Primary tag value: ${{ steps.tag.outputs.primary_tag }}"
-        echo "Secondary tag value: ${{ steps.tag.outputs.secondary_tag }}"
     
     - name: Build Docker Image
       run: |
@@ -44,7 +50,25 @@ jobs:
         docker push docker.pkg.github.com/${{ github.repository }}/test-app2:${{ steps.tag.outputs.primary_tag }}
 
     - name: Tag and Push Docker Image as Latest
-      if: steps.tag.outputs.secondary_tag == 'latest'
       run: |
         docker tag docker.pkg.github.com/${{ github.repository }}/test-app2:${{ steps.tag.outputs.primary_tag }} docker.pkg.github.com/${{ github.repository }}/test-app2:latest
         docker push docker.pkg.github.com/${{ github.repository }}/test-app2:latest
+
+  helm-release:
+    needs: build-and-push-docker-image
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Auth with OIDC
+      uses: aws-actions/configure-aws-credentials@v3
+      with:
+        role-to-assume: arn:aws:iam::${{env.AWS_ACCOUNT_ID}}:role/${{env.IAM_ROLE_NAME}}
+        aws-region: ${{ env.AWS_REGION }}
+    
