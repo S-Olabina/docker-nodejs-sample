@@ -16,6 +16,9 @@ env:
   AWS_REGION: eu-central-1
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }} 
   IAM_ROLE_NAME: ${{ secrets.IAM_ROLE_NAME }}
+  ECR_REPOSITORY_NAME: private-ecr-repo
+  HELM_RELEASE_NAME: todo
+  HELM_CHART_PATH: infrastructure/Helm
 
 jobs:
   build-and-push-docker-image:
@@ -53,6 +56,10 @@ jobs:
       run: |
         docker tag docker.pkg.github.com/${{ github.repository }}/test-app2:${{ steps.tag.outputs.primary_tag }} docker.pkg.github.com/${{ github.repository }}/test-app2:latest
         docker push docker.pkg.github.com/${{ github.repository }}/test-app2:latest
+    
+    outputs:
+      tag-version: ${{steps.tag.outputs.primary_tag}}
+
 
   helm-release:
     needs: build-and-push-docker-image
@@ -71,4 +78,17 @@ jobs:
       with:
         role-to-assume: arn:aws:iam::${{env.AWS_ACCOUNT_ID}}:role/${{env.IAM_ROLE_NAME}}
         aws-region: ${{ env.AWS_REGION }}
-    
+
+    - name: Install kubectl
+      run: |
+        curl -o kubectl https://amazon-eks.s3.${{ env.AWS_REGION }}.amazonaws.com/1.21.2/2021-07-05/bin/linux/amd64/kubectl
+        chmod +x ./kubectl
+        sudo mv ./kubectl /usr/local/bin/
+
+    - name: Install Helm
+      run: |
+        curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
+    - name: Upgrade Helm Release
+      run: |
+        helm upgrade ${{ env.HELM_RELEASE_NAME }} ${{ env.HELM_CHART_PATH }} --set image.repository=${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY_NAME }} --set image.tag=${{ needs.build-and-push-docker-image.outputs.tag-version }}
