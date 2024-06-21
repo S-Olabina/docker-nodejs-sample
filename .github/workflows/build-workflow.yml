@@ -103,7 +103,14 @@ jobs:
 
     - name: Debug Kubernetes Connectivity
       run: |
+        kubectl config view
+
+    - name: Debug 1
+      run: |
         kubectl cluster-info
+
+    - name: Debug 2
+      run: |
         kubectl get all --all-namespaces
 
     - name: Upgrade Helm Release
