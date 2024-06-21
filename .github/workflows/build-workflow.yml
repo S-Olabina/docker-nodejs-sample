@@ -73,7 +73,14 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-      
+    
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{secrets.PERSONAL_ACCESS_TOKEN}}
+
     - name: Auth with OIDC
       uses: aws-actions/configure-aws-credentials@v4
       with:
@@ -87,12 +94,6 @@ jobs:
         registries: ${{ env.AWS_ACCOUNT_ID }}
         mask-password: 'true'
 
-    - name: Install kubectl
-      run: |
-        curl -o kubectl https://amazon-eks.s3.${{ env.AWS_REGION }}.amazonaws.com/1.21.2/2021-07-05/bin/linux/amd64/kubectl
-        chmod +x ./kubectl
-        sudo mv ./kubectl /usr/local/bin/
-
     - name: Install Helm
       run: |
         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
@@ -100,14 +101,6 @@ jobs:
     - name: Update kubeconfig
       run: |
         aws eks update-kubeconfig --name ${{ env.EKS_NAME }} --region ${{ env.AWS_REGION }}
-
-    - name: Debug 1
-      run: |
-        kubectl cluster-info
-
-    - name: Debug 2
-      run: |
-        kubectl get all --all-namespaces
 
     - name: Upgrade Helm Release
       run: |
