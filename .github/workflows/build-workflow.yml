@@ -101,10 +101,6 @@ jobs:
       run: |
         aws eks update-kubeconfig --name ${{ env.EKS_NAME }} --region ${{ env.AWS_REGION }}
 
-    - name: Debug Kubernetes Connectivity
-      run: |
-        kubectl config view
-
     - name: Debug 1
       run: |
         kubectl cluster-info
