@@ -91,4 +91,4 @@ jobs:
 
     - name: Upgrade Helm Release
       run: |
-        helm upgrade ${{ env.HELM_RELEASE_NAME }} oci://${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.com/${{ env.ECR_REPOSITORY_NAME }} --version 0.1.5 -n vegait-training --set image.tag=${{ needs.build-and-push-docker-image.outputs.tag-version }} --reuse-values
+        helm upgrade ${{ env.HELM_RELEASE_NAME }} oci://${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY_NAME }} --version 0.1.5 -n vegait-training --set image.tag=${{ needs.build-and-push-docker-image.outputs.tag-version }} --reuse-values
