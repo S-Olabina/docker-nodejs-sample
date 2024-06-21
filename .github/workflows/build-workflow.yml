@@ -83,6 +83,9 @@ jobs:
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
+      with:
+        registries: ${{ env.AWS_ACCOUNT_ID }}
+        mask-password: 'false'
 
     - name: Install kubectl
       run: |
@@ -94,7 +97,10 @@ jobs:
       run: |
         curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
 
-    - name: Upgrade Helm Release
+    - name: Update kubeconfig
       run: |
         aws eks update-kubeconfig --name ${{ env.EKS_NAME }} --region ${{ env.AWS_REGION }}
+
+    - name: Upgrade Helm Release
+      run: |
         helm upgrade ${{ env.HELM_RELEASE_NAME }} oci://${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY_NAME }} --version 0.1.5 -n vegait-training --set image.tag=${{ needs.build-and-push-docker-image.outputs.tag-version }} --reuse-values
