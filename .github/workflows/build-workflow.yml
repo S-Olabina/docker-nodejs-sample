@@ -93,6 +93,12 @@ jobs:
       with:
         registries: ${{ env.AWS_ACCOUNT_ID }}
         mask-password: 'true'
+      
+    - name: Set up helm
+      uses: azure/setup-helm@v4.2.0
+      with:
+        version: 'v3.14.4'
+      id: install
 
     - name: Update kubeconfig
       run: |
