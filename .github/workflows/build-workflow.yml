@@ -103,9 +103,14 @@ jobs:
     - name: Update kubeconfig
       run: |
         aws eks update-kubeconfig --name ${{ env.EKS_NAME }} --region ${{ env.AWS_REGION }}
+
     - name: Config view
       run: |
         kubectl config view
+
+    - name: Cluster info
+      run: |
+        kubectl cluster-info
 
     - name: Upgrade Helm Release
       run: |
