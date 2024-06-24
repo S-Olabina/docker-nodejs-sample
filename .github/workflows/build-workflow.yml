@@ -110,7 +110,7 @@ jobs:
 
     - name: Cluster info
       run: |
-        kubectl cluster-info
+        kubectl cluster-info -n vegait-training
 
     - name: Upgrade Helm Release
       run: |
