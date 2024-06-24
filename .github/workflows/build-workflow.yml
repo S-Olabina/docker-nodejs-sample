@@ -16,6 +16,10 @@ env:
   AWS_REGION: eu-central-1
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }} 
   IAM_ROLE_NAME: ${{ secrets.IAM_ROLE_NAME }}
+  ECR_REPOSITORY_NAME: private-ecr-repo
+  HELM_RELEASE_NAME: todo
+  HELM_CHART_PATH: infrastructure/Helm
+  EKS_NAME: task2_eks
 
 jobs:
   build-and-push-docker-image:
@@ -23,7 +27,7 @@ jobs:
     
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Log intoGitHub Packages
       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login -u "${{ github.actor }}" --password-stdin docker.pkg.github.com
@@ -53,6 +57,10 @@ jobs:
       run: |
         docker tag docker.pkg.github.com/${{ github.repository }}/test-app2:${{ steps.tag.outputs.primary_tag }} docker.pkg.github.com/${{ github.repository }}/test-app2:latest
         docker push docker.pkg.github.com/${{ github.repository }}/test-app2:latest
+    
+    outputs:
+      tag-version: ${{steps.tag.outputs.primary_tag}}
+
 
   helm-release:
     needs: build-and-push-docker-image
@@ -64,11 +72,40 @@ jobs:
     
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
+    
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{secrets.PERSONAL_ACCESS_TOKEN}}
 
     - name: Auth with OIDC
-      uses: aws-actions/configure-aws-credentials@v3
+      uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: arn:aws:iam::${{env.AWS_ACCOUNT_ID}}:role/${{env.IAM_ROLE_NAME}}
         aws-region: ${{ env.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
+      with:
+        registries: ${{ env.AWS_ACCOUNT_ID }}
+        mask-password: 'true'
+      
+    - name: Set up helm
+      uses: azure/setup-helm@v4.2.0
+      with:
+        version: 'v3.14.4'
+      id: install
+
+    - name: Update kubeconfig
+      run: |
+        aws eks update-kubeconfig --name ${{ env.EKS_NAME }} --region ${{ env.AWS_REGION }}
+
+    - name: Upgrade Helm Release
+      run: |
+        helm upgrade ${{ env.HELM_RELEASE_NAME }} oci://${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY_NAME }} -n vegait-training --set image.tag=${{ needs.build-and-push-docker-image.outputs.tag-version }} --reuse-values
+
     

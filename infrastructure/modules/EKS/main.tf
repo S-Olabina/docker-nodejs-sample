@@ -9,7 +9,7 @@ module "eks" {
   subnet_ids = var.subnet_ids
 
   cluster_endpoint_public_access  = true
-  cluster_endpoint_public_access_cidrs = ["82.117.207.248/32"]
+  cluster_endpoint_public_access_cidrs = ["0.0.0.0/0"]
 
   cluster_endpoint_private_access = true
   

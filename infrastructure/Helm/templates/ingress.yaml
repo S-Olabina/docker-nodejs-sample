@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Values.appname }}-ingress
+  name: {{ .Release.Name }}-ingress
   namespace: {{ .Values.namespace}}
   annotations:
     alb.ingress.kubernetes.io/target-type: {{ .Values.ingress.albTargetType }}
@@ -15,19 +15,14 @@ spec:
   tls:
     - hosts:
       - {{ .Values.ingress.host }}
-  defaultBackend:
-    service:
-      name: {{ .Values.appname}}-service
-      port:
-        number: {{ .Values.service.port }}
   rules:
   - host: {{ .Values.ingress.host}} 
     http:
-    paths:
-    - path: {{ .Values.ingress.path }}
-      pathType: {{ .Values.ingress.pathType }}
-      backend:
-        service:
-          name: {{ .Values.appname }}-service
-          port:
-            number: {{ .Values.service.port }}
+      paths:
+      - path: {{ .Values.ingress.path }}
+        pathType: {{ .Values.ingress.pathType }}
+        backend:
+          service:
+            name: {{ .Values.appname }}-service
+            port:
+              number: {{ .Values.service.port }}
