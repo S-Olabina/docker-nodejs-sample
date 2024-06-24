@@ -104,14 +104,6 @@ jobs:
       run: |
         aws eks update-kubeconfig --name ${{ env.EKS_NAME }} --region ${{ env.AWS_REGION }}
 
-    - name: Config view
-      run: |
-        kubectl config view
-
-    - name: Cluster info
-      run: |
-        kubectl cluster-info -n vegait-training
-
     - name: Upgrade Helm Release
       run: |
         helm upgrade ${{ env.HELM_RELEASE_NAME }} oci://${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY_NAME }} -n vegait-training --set image.tag=${{ needs.build-and-push-docker-image.outputs.tag-version }} --reuse-values
